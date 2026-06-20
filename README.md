@@ -59,14 +59,14 @@ number-guessing-game/
 Difficulty Levels
 Level	Number Range	Attempts
 Easy	1 - 50	          10
-Medium	1 - 100	           8 
+Medium	1 - 100	         8 
 Hard	1 - 200	           6
 
 ## Screenshot
 
 ![Number Guessing Game Screenshot](screenshot.jpeg)
 
-Author
-Your Name
+## Author
+Sakshi Ramakabal Maurya B.Tech in Information Technology at K.j. Somaiya institute of technology
 
  
