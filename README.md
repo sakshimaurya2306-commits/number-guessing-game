@@ -1,4 +1,4 @@
-# Number Guessing Game
+# Task 02: Number Guessing Game
 
 A responsive Number Guessing Game built using HTML, CSS, and JavaScript. This project was created as part of my Software Development internship task.
 
@@ -8,7 +8,8 @@ A responsive Number Guessing Game built using HTML, CSS, and JavaScript. This pr
  https://sakshimaurya2306-commits.github.io/number-guessing-game/
 
 ```
-About The Project
+## About The Project :
+
 The Number Guessing Game generates a random number and challenges the user to guess it. After every guess, the app compares the user's input with the generated number and gives feedback such as too high, too low, or correct.
 
 The project includes a modern glassmorphism user interface and interactive game features.
