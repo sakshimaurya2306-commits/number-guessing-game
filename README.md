@@ -4,9 +4,7 @@ A responsive Number Guessing Game built using HTML, CSS, and JavaScript. This pr
 
 ## Live Demo
 
-Add your live project link here:
-
-```text
+```
  https://sakshimaurya2306-commits.github.io/number-guessing-game/
 
 ```
