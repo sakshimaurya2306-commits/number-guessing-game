@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Number Guessing Game</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: white;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(45, 220, 200, 0.25), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(255, 100, 120, 0.25), transparent 28%),
+        linear-gradient(135deg, #101114, #252631, #15161d);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .left-card,
+    .right-card {
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      border-radius: 10px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    .left-card {
+      min-height: 560px;
+      padding: 45px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-card::before {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 50%;
+      right: -60px;
+      top: -55px;
+    }
+
+    .tag {
+      display: inline-block;
+      color: #32d6c7;
+      border: 1px solid #32d6c7;
+      padding: 9px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+      margin-bottom: 35px;
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 78px;
+      line-height: 0.95;
+      margin-bottom: 25px;
+    }
+
+    .subtitle {
+      color: #c8ccd8;
+      font-size: 20px;
+      line-height: 1.6;
+      max-width: 430px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .stat-box {
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .stat-box span {
+      display: block;
+      color: #c8ccd8;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .stat-box strong {
+      font-size: 22px;
+    }
+
+    .right-card {
+      padding: 35px;
+    }
+
+    .difficulty {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 7px;
+      background: rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      margin-bottom: 35px;
+    }
+
+    .difficulty button {
+      height: 55px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #c8ccd8;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .difficulty button.active {
+      color: #111;
+      background: linear-gradient(135deg, #32d6c7, #ffc857);
+    }
+
+    label {
+      display: block;
+      color: #c8ccd8;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      gap: 14px;
+    }
+
+    input {
+      height: 58px;
+      padding: 0 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(0, 0, 0, 0.25);
+      color: white;
+      font-size: 18px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #32d6c7;
+      box-shadow: 0 0 0 4px rgba(50, 214, 199, 0.15);
+    }
+
+    .guess-btn {
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff7366, #ffc857);
+      color: #111;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .message {
+      min-height: 85px;
+      margin: 28px 0 20px;
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(0, 0, 0, 0.18);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .progress {
+      height: 11px;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      margin-bottom: 35px;
+    }
+
+    .progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #32d6c7, #ffc857, #ff7366);
+      transition: 0.3s;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .restart {
+      padding: 14px 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .history {
+      list-style: none;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-height: 100px;
+    }
+
+    .history li {
+      padding: 10px 15px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      font-weight: bold;
+    }
+
+    .win {
+      border-color: #73d677;
+      color: #dfffdf;
+    }
+
+    .warning {
+      border-color: #ffc857;
+      color: #fff0c2;
+    }
+
+    .lose {
+      border-color: #ff7366;
+      color: #ffd8d4;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 55px;
+      }
+
+      .left-card {
+        min-height: auto;
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 550px) {
+      body {
+        padding: 15px;
+      }
+
+      .left-card,
+      .right-card {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .stats,
+      .difficulty,
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+
+      .guess-btn {
+        height: 55px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <section class="left-card">
+      <div>
+        
+        <h1>Number Guessing Game</h1>
+        <p class="subtitle">Guess the secret number before your attempts run out.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat-box">
+          <span>Range</span>
+          <strong id="rangeText">1 - 50</strong>
+        </div>
+        <div class="stat-box">
+          <span>Attempts</span>
+          <strong id="attemptText">0 / 10</strong>
+        </div>
+        <div class="stat-box">
+          <span>Best</span>
+          <strong id="bestText">--</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="right-card">
+      <div class="difficulty">
+        <button class="level active" data-level="easy">Easy</button>
+        <button class="level" data-level="medium">Medium</button>
+        <button class="level" data-level="hard">Hard</button>
+      </div>
+
+      <form id="guessForm">
+        <label for="guessInput">Your guess</label>
+        <div class="input-row">
+          <input type="number" id="guessInput" placeholder="Enter number" required />
+          <button class="guess-btn" type="submit">Guess</button>
+        </div>
+      </form>
+
+      <div class="message" id="message">I am thinking of a number.</div>
+
+      <div class="progress">
+        <span id="progressBar"></span>
+      </div>
+
+      <div class="history-header">
+        <h2>Guess History</h2>
+        <button class="restart" id="restartBtn">Restart</button>
+      </div>
+
+      <ul class="history" id="historyList"></ul>
+    </section>
+  </div>
+
+  <script>
+    const levels = {
+      easy: { min: 1, max: 50, attempts: 10 },
+      medium: { min: 1, max: 100, attempts: 8 },
+      hard: { min: 1, max: 200, attempts: 6 }
+    };
+
+    let currentLevel = "easy";
+    let secretNumber;
+    let attemptsUsed = 0;
+    let gameOver = false;
+    let bestScore = localStorage.getItem("bestScore");
+
+    const rangeText = document.getElementById("rangeText");
+    const attemptText = document.getElementById("attemptText");
+    const bestText = document.getElementById("bestText");
+    const guessForm = document.getElementById("guessForm");
+    const guessInput = document.getElementById("guessInput");
+    const message = document.getElementById("message");
+    const progressBar = document.getElementById("progressBar");
+    const historyList = document.getElementById("historyList");
+    const restartBtn = document.getElementById("restartBtn");
+    const levelButtons = document.querySelectorAll(".level");
+
+    function startGame() {
+      const level = levels[currentLevel];
+
+      secretNumber = Math.floor(Math.random() * (level.max - level.min + 1)) + level.min;
+      attemptsUsed = 0;
+      gameOver = false;
+
+      rangeText.textContent = `${level.min} - ${level.max}`;
+      attemptText.textContent = `0 / ${level.attempts}`;
+      bestText.textContent = bestScore ? `${bestScore} tries` : "--";
+
+      guessInput.value = "";
+      guessInput.min = level.min;
+      guessInput.max = level.max;
+      guessInput.disabled = false;
+
+      document.querySelector(".guess-btn").disabled = false;
+      message.textContent = "I am thinking of a number.";
+      message.className = "message";
+
+      progressBar.style.width = "0%";
+      historyList.innerHTML = "";
+    }
+
+    function updateMessage(text, type) {
+      message.textContent = text;
+      message.className = "message";
+
+      if (type) {
+        message.classList.add(type);
+      }
+    }
+
+    function addHistory(guess) {
+      const item = document.createElement("li");
+      item.textContent = guess;
+      historyList.prepend(item);
+    }
+
+    guessForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      if (gameOver) return;
+
+      const level = levels[currentLevel];
+      const guess = Number(guessInput.value);
+
+      if (guess < level.min || guess > level.max || !Number.isInteger(guess)) {
+        updateMessage(`Please enter a number between ${level.min} and ${level.max}.`, "warning");
+        return;
+      }
+
+      attemptsUsed++;
+      addHistory(guess);
+
+      attemptText.textContent = `${attemptsUsed} / ${level.attempts}`;
+      progressBar.style.width = `${(attemptsUsed / level.attempts) * 100}%`;
+
+      if (guess === secretNumber) {
+        updateMessage(`Correct! You guessed it in ${attemptsUsed} attempts.`, "win");
+        gameOver = true;
+        guessInput.disabled = true;
+        document.querySelector(".guess-btn").disabled = true;
+
+        if (!bestScore || attemptsUsed < Number(bestScore)) {
+          bestScore = attemptsUsed;
+          localStorage.setItem("bestScore", bestScore);
+          bestText.textContent = `${bestScore} tries`;
+        }
+
+        return;
+      }
+
+      if (guess < secretNumber) {
+        updateMessage(`${guess} is too low. Try a bigger number.`, "warning");
+      } else {
+        updateMessage(`${guess} is too high. Try a smaller number.`, "warning");
+      }
+
+      if (attemptsUsed === level.attempts) {
+        updateMessage(`Game over! The correct number was ${secretNumber}.`, "lose");
+        gameOver = true;
+        guessInput.disabled = true;
+        document.querySelector(".guess-btn").disabled = true;
+      }
+
+      guessInput.value = "";
+    });
+
+    restartBtn.addEventListener("click", startGame);
+
+    levelButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        levelButtons.forEach(function (btn) {
+          btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        currentLevel = button.dataset.level;
+        startGame();
+      });
+    });
+
+    startGame();
+  </script>
+</body>
+</html>
