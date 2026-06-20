@@ -7,7 +7,7 @@ A responsive Number Guessing Game built using HTML, CSS, and JavaScript. This pr
 Add your live project link here:
 
 ```text
-https://your-github-username.github.io/number-guessing-game/
+ https://sakshimaurya2306-commits.github.io/number-guessing-game/
 
 ```
 About The Project
